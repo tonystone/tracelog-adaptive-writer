@@ -12,7 +12,7 @@ let package = Package(
             .executable(name: "tester", targets: ["TraceLogJournalWriter"])
         ],
         dependencies: [
-            .package(url: "git@github.com:felix91gr/Csdjournal.git", .exactItem("0.9.0"))
+            .package(url: "https://github.com/felix91gr/Csdjournal.git", .exactItem("0.9.0"))
         ],
         targets: [
             /// Module targets

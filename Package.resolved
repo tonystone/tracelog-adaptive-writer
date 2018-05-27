@@ -2,12 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "Csdjournal",
-        "repositoryURL": "/Users/tony/Workspaces/tonystone/Csdjournal",
+        "package": "CSDJournal",
+        "repositoryURL": "https://github.com/felix91gr/Csdjournal.git",
         "state": {
-          "branch": "master",
-          "revision": "159e57ca58d9b2ed73abc736a956612d7c26fc68",
-          "version": null
+          "branch": null,
+          "revision": "8829bbf1e17308900d38974491167ee6968389b0",
+          "version": "0.9.0"
         }
       }
     ]
