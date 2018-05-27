@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Csdjournal",
+        "repositoryURL": "/Users/tony/Workspaces/tonystone/Csdjournal",
+        "state": {
+          "branch": "master",
+          "revision": "159e57ca58d9b2ed73abc736a956612d7c26fc68",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
