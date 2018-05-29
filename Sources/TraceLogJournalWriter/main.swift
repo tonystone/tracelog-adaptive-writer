@@ -26,3 +26,9 @@ for i in 0..<utf8Text.count {
 }
 
 print("Call result: \(sd_journal_sendv(&array, Int32(array.count)))")
+
+
+/// Another possibly cleaner implementation without a shim.
+withVaList([]) { vaList -> Void in
+    print("Call result: \(sd_journal_printv_with_location(LOG_INFO, "CODE_FILE=\(#file)", "CODE_LINE=\(#line)", "\(#function)", "Test Message", vaList))")
+}
