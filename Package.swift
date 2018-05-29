@@ -12,11 +12,10 @@ let package = Package(
             .executable(name: "tester", targets: ["TraceLogJournalWriter"])
         ],
         dependencies: [
-            .package(url: "https://github.com/felix91gr/Csdjournal.git", .exactItem("0.9.0"))
+            .package(url: "https://github.com/tonystone/Csdjournal.git", .branchItem("master"))
         ],
         targets: [
-            /// Module targets
-            .target(name: "TraceLogJournalWriter", dependencies: [], path: "Sources/TraceLogJournalWriter")
+            .target(name: "TraceLogJournalWriter", dependencies: ["CSDJournal"], path: "Sources/TraceLogJournalWriter"),
         ],
         swiftLanguageVersions: [4]
 )
