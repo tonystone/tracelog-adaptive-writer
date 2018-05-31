@@ -3,11 +3,20 @@
     "pins": [
       {
         "package": "CSDJournal",
-        "repositoryURL": "https://github.com/tonystone/Csdjournal.git",
+        "repositoryURL": "https://github.com/tonystone/csdjournal.git",
         "state": {
           "branch": "master",
           "revision": "888985e0046e50025591332aa2a0c1fffdd3b001",
           "version": null
+        }
+      },
+      {
+        "package": "TraceLog",
+        "repositoryURL": "https://github.com/tonystone/tracelog.git",
+        "state": {
+          "branch": null,
+          "revision": "bec9f04904fdd97f8abf57c2c56887b6d6abd954",
+          "version": "2.2.0"
         }
       }
     ]
