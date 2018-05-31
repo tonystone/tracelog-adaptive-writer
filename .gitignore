@@ -1,6 +1,7 @@
 # Xcode
 #
-# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+/*.xcodeproj
+/*.xcworkspace
 
 ## Build generated
 build/
@@ -35,9 +36,9 @@ playground.xcworkspace
 # Swift Package Manager
 #
 # Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
-# Packages/
-# Package.pins
-# Package.resolved
+Packages/
+Package.pins
+Package.resolved
 .build/
 
 # CocoaPods
@@ -66,3 +67,10 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# Vagrant
+.vagrant
+Vagrantfile
+
+# JetBrains products
+.idea
