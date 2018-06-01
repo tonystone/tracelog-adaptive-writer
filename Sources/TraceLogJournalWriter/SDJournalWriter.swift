@@ -44,6 +44,11 @@ public class SDJournalWriter: Writer {
     ]
 
     ///
+    /// Override value for the systemd journal field SYSLOG_IDENTIFIER.
+    ///
+    private let syslogIdentifier: String?
+
+    ///
     /// A dictionary keyed by TraceLog LogLevels with the value to convert to the sd-journals level.
     ///
     private let logLevelConversion: [LogLevel: SDJournalPriority]
@@ -52,9 +57,11 @@ public class SDJournalWriter: Writer {
     /// Initializes an SDJournalWriter.
     ///
     /// - Parameters:
+    ///     - syslogIdentifier: A String override value for the systemd journal field SYSLOG_IDENTIFIER. If not passsed the journal will set it's default value.
     ///     - logLevelConversion: A dictionary keyed by TraceLog LogLevels with the value to convert to the os_log level.
     ///
-    public init(logLevelConversion: [LogLevel: SDJournalPriority] = SDJournalWriter.defaultLogLevelConversion) {
+    public init(syslogIdentifier: String? = nil, logLevelConversion: [LogLevel: SDJournalPriority] = SDJournalWriter.defaultLogLevelConversion) {
+        self.syslogIdentifier   = syslogIdentifier
         self.logLevelConversion = logLevelConversion
     }
 
@@ -63,8 +70,19 @@ public class SDJournalWriter: Writer {
     ///
     public func log(_ timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: RuntimeContext, staticContext: StaticContext) {
 
-        withVaList([]) { vaList -> Void in
-            sd_journal_printv_with_location(convertLogLevel(for: level), "CODE_FILE=\(staticContext.file)", "CODE_LINE=\(staticContext.line)", staticContext.function, message, vaList)
+        var elements  = ["MESSAGE=\(message)",
+                         "CODE_FILE=\(staticContext.file)",
+                         "CODE_LINE=\(staticContext.line)",
+                         "CODE_FUNC=\(staticContext.function)",
+                         "PRIORITY=\(convertLogLevel(for: level))",
+                         "TAG=\(tag)"]
+
+        if let identifier = self.syslogIdentifier {
+            elements.append("SYSLOG_IDENTIFIER=\(identifier)")
+        }
+
+        withIovecArray(elements) { array, count -> Void in
+            sd_journal_sendv(array, count)
         }
     }
 
@@ -80,4 +98,26 @@ public class SDJournalWriter: Writer {
         return level
     }
 }
+
+///
+/// Helper function to convert an Array of strings into an array of iovec structs suitable for passing
+/// to C level functions.
+///
+private func withIovecArray<R>(_ elements: [String], _ body: (UnsafePointer<iovec>, Int32) -> R) -> R {
+
+    var cStrings = elements.map { $0.utf8CString }
+
+    var iovecArray: [iovec] = []
+
+    for i in 0..<cStrings.count {
+        let len = cStrings[i].count - 1
+        cStrings[i].withUnsafeMutableBytes { (bytes) -> Void in
+            if let address = bytes.baseAddress {
+                iovecArray.append(iovec(iov_base: address, iov_len: len))
+            }
+        }
+    }
+    return body(&iovecArray, Int32(iovecArray.count))
+}
+
 #endif

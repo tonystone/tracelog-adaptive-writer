@@ -52,6 +52,7 @@ extension SDJournalWriterTests {
             ("testConvertLogLvelTrace2WithEmptyConversionTable", testConvertLogLvelTrace2WithEmptyConversionTable),
             ("testConvertLogLvelTrace3WithEmptyConversionTable", testConvertLogLvelTrace3WithEmptyConversionTable),
             ("testConvertLogLvelTrace4WithEmptyConversionTable", testConvertLogLvelTrace4WithEmptyConversionTable),
+            ("testSyslogIdentifier",testSyslogIdentifier)
 
         ]
     }
