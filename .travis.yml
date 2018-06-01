@@ -18,4 +18,5 @@ install:
 script:
   - docker exec -t ubuntu-test bash -c "cd /travis;
       export PATH=/travis/swift-4.1-RELEASE-ubuntu14.04/usr/bin:$PATH;
-      swift test;"
+      swift test;
+      ls -al;"
