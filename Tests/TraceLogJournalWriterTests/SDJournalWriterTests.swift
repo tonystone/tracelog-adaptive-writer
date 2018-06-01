@@ -91,6 +91,16 @@ class SDJournalWriterTests: XCTestCase {
         XCTAssertEqual(SDJournalWriter(logLevelConversion: [:]).convertLogLevel(for: .trace4), LOG_INFO)
     }
 
+    // MARK: - Init method tests
+
+    func testSyslogIdentifier() {
+        let syslogIdentifier = "TestSyslogIdentifier"
+
+        _testLog(for: .error, TestStaticContext(), SDJournalWriter(syslogIdentifier: syslogIdentifier), syslogIdentifier) { input, writer in
+
+            writer.log(input.timestamp, level: input.level, tag: input.tag, message: input.message, runtimeContext: input.runtimeContext, staticContext: input.staticContext)
+        }
+    }
 
     // MARK: - Direct calls to the writer with default conversion table.
 
@@ -209,7 +219,7 @@ class TraceLogWithSDJournalWriterTests: XCTestCase {
 ///
 ///
 ///
-private func _testLog(for level: LogLevel, _ staticContext: TestStaticContext, _ writer: SDJournalWriter, logBlock: ((timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: TestRuntimeContext, staticContext: TestStaticContext), SDJournalWriter) -> Void) {
+private func _testLog(for level: LogLevel, _ staticContext: TestStaticContext, _ writer: SDJournalWriter, _ syslogIdentifier: String = "TraceLogJournalWriterPackageTests.xctest", logBlock: ((timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: TestRuntimeContext, staticContext: TestStaticContext), SDJournalWriter) -> Void) {
 
     /// This is the time in microseconds since the epoch UTC to match the journals time stamps.
     let timestamp = Date().timeIntervalSince1970 * 1000.0
@@ -220,7 +230,7 @@ private func _testLog(for level: LogLevel, _ staticContext: TestStaticContext, _
     logBlock(input, writer)
 
     do {
-        let found = try journalEntryExists(for: input, writer: writer)
+        let found = try journalEntryExists(for: input, writer: writer, syslogIdentifier: syslogIdentifier)
 
         XCTAssertTrue(found)
     } catch {
@@ -231,10 +241,10 @@ private func _testLog(for level: LogLevel, _ staticContext: TestStaticContext, _
 ///
 /// Valdate that the log record is in the journal
 ///
-private func journalEntryExists(for input: (timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: TestRuntimeContext, staticContext: TestStaticContext), writer: SDJournalWriter) throws -> Bool {
+private func journalEntryExists(for input: (timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: TestRuntimeContext, staticContext: TestStaticContext), writer: SDJournalWriter, syslogIdentifier: String) throws -> Bool {
     let messageDate = Date(timeIntervalSince1970: input.timestamp / 1000.0)
 
-    let data = shell("journalctl -o json --identifier=TraceLogJournalWriterPackageTests.xctest --since='\(dateFormatter.string(from: messageDate))'")
+    let data = shell("journalctl -o json --identifier=\(syslogIdentifier) --since='\(dateFormatter.string(from: messageDate))'")
 
     ///
     /// The journal entries are returned one JSON object per line so split the
@@ -258,7 +268,8 @@ private func journalEntryExists(for input: (timestamp: Double, level: LogLevel, 
                journalEntry["CODE_FILE"] as? String ?? "" == input.staticContext.file &&
                journalEntry["CODE_LINE"] as? String ?? "" == String(input.staticContext.line) &&
                journalEntry["CODE_FUNC"] as? String ?? "" == input.staticContext.function &&
-               journalEntry["MESSAGE"]   as? String ?? "" == input.message {
+               journalEntry["MESSAGE"]   as? String ?? "" == input.message &&
+               journalEntry["TAG"]       as? String ?? "" == input.tag {
 
                 return true
             }
