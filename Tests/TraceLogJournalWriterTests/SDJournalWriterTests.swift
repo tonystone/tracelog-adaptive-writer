@@ -264,12 +264,13 @@ private func journalEntryExists(for input: (timestamp: Double, level: LogLevel, 
             ///
             /// These should be all the fields we pass to systemd journal.
             ///
-            if journalEntry["PRIORITY"]  as? String ?? "" == String(writer.convertLogLevel(for: input.level)) &&
-               journalEntry["CODE_FILE"] as? String ?? "" == input.staticContext.file &&
-               journalEntry["CODE_LINE"] as? String ?? "" == String(input.staticContext.line) &&
-               journalEntry["CODE_FUNC"] as? String ?? "" == input.staticContext.function &&
-               journalEntry["MESSAGE"]   as? String ?? "" == input.message &&
-               journalEntry["TAG"]       as? String ?? "" == input.tag {
+            if journalEntry["SYSLOG_IDENTIFIER"] as? String ?? "" == syslogIdentifier &&
+               journalEntry["PRIORITY"]          as? String ?? "" == String(writer.convertLogLevel(for: input.level)) &&
+               journalEntry["CODE_FILE"]         as? String ?? "" == input.staticContext.file &&
+               journalEntry["CODE_LINE"]         as? String ?? "" == String(input.staticContext.line) &&
+               journalEntry["CODE_FUNC"]         as? String ?? "" == input.staticContext.function &&
+               journalEntry["MESSAGE"]           as? String ?? "" == input.message &&
+               journalEntry["TAG"]               as? String ?? "" == input.tag {
 
                 return true
             }
