@@ -19,6 +19,8 @@ RUN apt-get install -y  \
 # Fix clang links on Ubuntu 16.04
 RUN ln -s /usr/bin/clang-3.8 /usr/bin/clang && ln -s /usr/bin/clang++-3.8 /usr/bin/clang++
 
+RUN mkdir /travis
+
 ENV WORKDIR /travis
 WORKDIR ${WORKDIR}
 
