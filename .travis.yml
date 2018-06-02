@@ -12,4 +12,4 @@ before_install:
 
 script:
   - docker logs systemd-test
-  - docker exec -t systemd-test bash -c "pwd; ls -al; swift test;"
+  - docker exec -t systemd-test bash -c "pwd; ls -al; cd /workdir; swift test;"
