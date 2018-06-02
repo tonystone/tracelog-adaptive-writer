@@ -21,7 +21,6 @@ RUN ln -s /usr/bin/clang-3.8 /usr/bin/clang && ln -s /usr/bin/clang++-3.8 /usr/b
 
 # Install Swift
 RUN curl -O https://swift.org/builds/swift-4.1-release/ubuntu1604/swift-4.1-RELEASE/swift-4.1-RELEASE-ubuntu16.04.tar.gz \
-    && curl -O https://swift.org/builds/swift-4.1-release/ubuntu1604/swift-4.1-RELEASE/swift-4.1-RELEASE-ubuntu16.04.tar.gz \
     && tar xzvf swift-4.1-RELEASE-ubuntu16.04.tar.gz
 
 ENV PATH /swift-4.1-RELEASE-ubuntu16.04/usr/bin:$PATH

@@ -9,4 +9,4 @@ before_install:
   - docker build -t systemd-container .
 
 script:
-  - docker exec -t systemd-container bash -c "swift test;"
+  - docker run -t systemd-container bash -c "swift test;"
