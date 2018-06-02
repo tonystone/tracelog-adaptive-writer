@@ -7,8 +7,9 @@ services:
 
 before_install:
   - docker build -t systemd .
-  - docker run --rm --privileged -v /:/host systemd setup
+  - docker run --rm --privileged -v /:/host solita/ubuntu-systemd setup
 
 script:
   - docker run -d --name systemd --security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro -t solita/ubuntu-systemd
+  - docker logs systemd
   - docker run d --name systemd --security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro bash -c "pwd; ls -al; journalctl;"
