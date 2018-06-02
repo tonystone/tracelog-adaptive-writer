@@ -9,4 +9,4 @@ before_install:
   - docker build -t systemd-container .
 
 script:
-  - docker run -t systemd-container bash -c "pwd; ls -al;"
+  - docker run -t systemd-container bash -c "pwd; ls -al; journalctl;"
