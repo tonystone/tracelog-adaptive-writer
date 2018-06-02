@@ -20,4 +20,4 @@ install:
   - docker exec              -t ubuntu-test bash -c "cd /travis && echo 'export CPLUS_INCLUDE_PATH=$C_INCLUDE_PATH' >> ~/.profile;"
 
 script:
-  - docker exec -t ubuntu-test bash -c "cd /travis && swift test;"
+  - docker exec -t ubuntu-test bash -c "cd /travis && source ~/.profile && swift test;"
