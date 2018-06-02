@@ -4,7 +4,7 @@ FROM ubuntu:xenial
 MAINTAINER "Tony Stone <http://github.com/tonystone>"
 
 # Install Dependencies
-RUN apt-get install -y  \
+RUN apt-get update && apt-get install -y  \
         clang-3.8 \
         lldb-3.8 \
         libcurl3 \
