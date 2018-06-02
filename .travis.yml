@@ -6,7 +6,7 @@ services:
   - docker
 
 before_install:
-  - cd /travis && docker build -t systemd-container .
+  - docker build -t systemd-container .
 
 script:
-  - docker exec -t systemd-container bash -c "cd /travis && swift test;"
+  - docker exec -t systemd-container bash -c "swift test;"
