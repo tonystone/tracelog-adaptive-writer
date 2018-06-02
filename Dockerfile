@@ -1,6 +1,6 @@
 # Run TraceLogJournalWriterTests in a container
 
-FROM ubuntu:xenial
+FROM solita/ubuntu-systemd:xenial
 MAINTAINER "Tony Stone <http://github.com/tonystone>"
 
 # Install Dependencies
@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y  \
         libxml2 \
         libpython2.7-dev \
         libsystemd-dev \
-        systemd \
         curl \
         git
 
