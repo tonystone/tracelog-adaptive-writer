@@ -9,7 +9,7 @@ before_install:
   - docker run -d --name ubuntu-test -v $(pwd):/travis ubuntu:xenial tail -f /dev/null
 
 install:
-  - docker exec -t ubuntu-test bash -c "cat /etc/os-release;
+  - docker exec --privileged -t ubuntu-test bash -c "cat /etc/os-release;
       apt-get update;
       apt-get -y install clang-3.8 lldb-3.8 libcurl3 libicu-dev libxml2 libpython2.7-dev wget libsystemd-dev;
       cd /travis;
