@@ -8,8 +8,8 @@ services:
 before_install:
   - docker build -t systemd-test .
   - docker run --rm --privileged -v /:/host systemd-test setup
+  - docker run -d --name systemd-test --security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro -t systemd-test
 
 script:
-  - docker run -d --name systemd-test --security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro -t systemd-test
   - docker logs systemd-test
-  - docker run -d --name systemd-test --security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro bash -c "pwd; ls -al; journalctl;"
+  - docker exec -t systemd-container bash -c "pwd; ls -al; journalctl;"
