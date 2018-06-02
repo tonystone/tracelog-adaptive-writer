@@ -11,5 +11,4 @@ before_install:
   - docker run -d --name systemd-test --security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro -t systemd-test
 
 script:
-  - docker logs systemd-test
-  - docker exec -t systemd-test bash -c "pwd; ls -al; cd /workdir; swift test;"
+  - docker exec -t systemd-test bash -c "swift test;"
