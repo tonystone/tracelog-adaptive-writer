@@ -1,0 +1,14 @@
+sudo: required
+
+language: c
+
+services:
+  - docker
+
+before_install:
+  - docker build -t systemd-test .
+  - docker run --rm --privileged -v /:/host systemd-test setup
+  - docker run -d --name systemd-test --security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro -t systemd-test
+
+script:
+  - docker exec -t systemd-test bash -c "swift test;"
