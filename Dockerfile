@@ -18,9 +18,8 @@ RUN apt-get update && apt-get install -y  \
 # Fix clang links on Ubuntu 16.04
 RUN ln -s /usr/bin/clang-3.8 /usr/bin/clang && ln -s /usr/bin/clang++-3.8 /usr/bin/clang++
 
-RUN mkdir ${WORKDIR}
-
 ENV WORKDIR /workdir
+RUN mkdir ${WORKDIR}
 WORKDIR ${WORKDIR}
 
 # Install Swift
