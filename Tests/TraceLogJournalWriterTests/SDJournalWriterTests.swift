@@ -229,54 +229,70 @@ private func _testLog(for level: LogLevel, _ staticContext: TestStaticContext, _
     /// Write to the test writer
     logBlock(input, writer)
 
-    do {
-        let found = try journalEntryExists(for: input, writer: writer, syslogIdentifier: syslogIdentifier)
-
-        XCTAssertTrue(found)
-    } catch {
-        XCTFail("Failed to parse journal logs for test validation with error: \(error).")
-    }
+     validateJournalEntry(for: input, writer: writer, syslogIdentifier: syslogIdentifier)
 }
 
 ///
-/// Valdate that the log record is in the journal
+/// Validate that the log record is in the journal
 ///
-private func journalEntryExists(for input: (timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: TestRuntimeContext, staticContext: TestStaticContext), writer: SDJournalWriter, syslogIdentifier: String) throws -> Bool {
+private func validateJournalEntry(for input: (timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: TestRuntimeContext, staticContext: TestStaticContext), writer: SDJournalWriter, syslogIdentifier: String) {
     let messageDate = Date(timeIntervalSince1970: input.timestamp / 1000.0)
 
     let data = shell("journalctl -o json --identifier=\(syslogIdentifier) --since='\(dateFormatter.string(from: messageDate))'")
 
+    guard data.count > 0
+            else { XCTFail("Journal entry not found for identifier \"\(syslogIdentifier)\"."); return }
     ///
-    /// The journal entries are returned one JSON object per line so split the
-    /// data into individual data elements in an array so we can parse each individually.
+    /// The journal entries are returned one JSON object per line with
+    /// no comma between lines.  This is invalid JSON on it's own so split the
+    /// data into individual data elements.  This way the array elements
+    /// can be parse individually.
     ///
-    guard let string = String(data: data, encoding: .utf8)
-        else { return false }
+    guard let string = String(data: data, encoding: .utf8), string.count > 0
+        else { XCTFail("Could not convert result data to String."); return }
 
-    guard string.count > 0
-        else { return false }
+    let dataArray = string.components(separatedBy: CharacterSet.newlines).compactMap { (string) -> Data? in
+        guard let data = string.data(using: .utf8), data.count > 0
+                else { return nil }
+        return data
+    }
 
-    let array = string.components(separatedBy: CharacterSet.newlines).map { $0.data(using: .utf8) ?? Data() }
+    guard dataArray.count > 0
+            else { XCTFail("Journal entry not found."); return }
 
-    for jsonData in array {
-        if let journalEntry = try JSONSerialization.jsonObject(with: jsonData) as? [String: Any] {
+    for jsonData in dataArray {
 
-            ///
-            /// These should be all the fields we pass to systemd journal.
-            ///
-            if journalEntry["SYSLOG_IDENTIFIER"] as? String ?? "" == syslogIdentifier &&
-               journalEntry["PRIORITY"]          as? String ?? "" == String(writer.convertLogLevel(for: input.level)) &&
-               journalEntry["CODE_FILE"]         as? String ?? "" == input.staticContext.file &&
-               journalEntry["CODE_LINE"]         as? String ?? "" == String(input.staticContext.line) &&
-               journalEntry["CODE_FUNC"]         as? String ?? "" == input.staticContext.function &&
-               journalEntry["MESSAGE"]           as? String ?? "" == input.message &&
-               journalEntry["TAG"]               as? String ?? "" == input.tag {
+        do {
+           let object = try JSONSerialization.jsonObject(with: jsonData)
 
-                return true
+            guard let journalEntry = object as? [String: Any]
+                    else {  XCTFail("Incorrect json object returned from parsing journalctl results, expected [String: Any] but got \(type(of: object))."); return }
+
+            /// Find the journal entry by message string (message string should be unique based on the string + timestamp).
+            if journalEntry["MESSAGE"] as? String ?? "" == input.message {
+
+                ///
+                /// These should be all the fields we pass to systemd journal.
+                ///
+                assertValue(for: journalEntry, key: "SYSLOG_IDENTIFIER", eqauls: syslogIdentifier)
+                assertValue(for: journalEntry, key: "PRIORITY",          eqauls: String(writer.convertLogLevel(for: input.level)))
+                assertValue(for: journalEntry, key: "CODE_FILE",         eqauls: input.staticContext.file)
+                assertValue(for: journalEntry, key: "CODE_LINE",         eqauls: String(input.staticContext.line))
+                assertValue(for: journalEntry, key: "CODE_FUNC",         eqauls: input.staticContext.function)
+                assertValue(for: journalEntry, key: "TAG",               eqauls: input.tag)
+
+                return  /// If we found a match and compared it, we're done!
             }
+        } catch {
+            XCTFail("Could parse JSON \(String(data: jsonData, encoding: .utf8) ?? "nil"), error: \(error)."); return
         }
     }
-    return false
+}
+
+private func assertValue(for jsonObject: [String: Any], key: String, eqauls expected: String) {
+    let result = jsonObject[key] as? String ?? ""
+
+    XCTAssertEqual(result, expected, "\(key) should be \"\(expected)\" but is equal to \"\(result)\".")
 }
 
 ///
