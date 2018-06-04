@@ -238,7 +238,7 @@ private func _testLog(for level: LogLevel, _ staticContext: TestStaticContext, _
 private func validateJournalEntry(for input: (timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: TestRuntimeContext, staticContext: TestStaticContext), writer: SDJournalWriter, syslogIdentifier: String) {
     let messageDateString = dateFormatter.string(from:Date(timeIntervalSince1970: (input.timestamp / 1000.0) - 1.0)) // Subtract 1 second to cover any tolerance issue with date searching on some platforms
 
-    let data = shell("journalctl -o json --identifier=\(syslogIdentifier) --since='\(messageDateSrtring)'")
+    let data = shell("journalctl -o json --identifier=\(syslogIdentifier) --since='\(messageDateString)'")
 
     guard data.count > 0
             else { XCTFail("Journal entry not found for identifier \"\(syslogIdentifier)\", since date: '\(messageDateString)'."); return }
