@@ -236,12 +236,12 @@ private func _testLog(for level: LogLevel, _ staticContext: TestStaticContext, _
 /// Validate that the log record is in the journal
 ///
 private func validateJournalEntry(for input: (timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: TestRuntimeContext, staticContext: TestStaticContext), writer: SDJournalWriter, syslogIdentifier: String) {
-    let messageDate = Date(timeIntervalSince1970: input.timestamp / 1000.0)
+    let messageDateString = dateFormatter.string(from:Date(timeIntervalSince1970: (input.timestamp / 1000.0) - 1.0)) // Subtract 1 second to cover any tolerance issue with date searching on some platforms
 
-    let data = shell("journalctl -o json --identifier=\(syslogIdentifier) --since='\(dateFormatter.string(from: messageDate))'")
+    let data = shell("journalctl -o json --identifier=\(syslogIdentifier) --since='\(messageDateSrtring)'")
 
     guard data.count > 0
-            else { XCTFail("Journal entry not found for identifier \"\(syslogIdentifier)\"."); return }
+            else { XCTFail("Journal entry not found for identifier \"\(syslogIdentifier)\", since date: '\(messageDateString)'."); return }
     ///
     /// The journal entries are returned one JSON object per line with
     /// no comma between lines.  This is invalid JSON on it's own so split the
@@ -320,7 +320,7 @@ struct TestStaticContext: StaticContext {
     public let line: Int
 
     ///
-    /// Init `self` capturing the static environement of the caller.
+    /// Init `self` capturing the static environment of the caller.
     ///
     init(_ dso: UnsafeRawPointer = #dsohandle, _ file: String = #file, _ function: String = #function, _ line: Int = #line) {
         self.dso        = dso
