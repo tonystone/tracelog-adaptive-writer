@@ -314,7 +314,6 @@ private func shell(_ command: String) -> Data {
 /// StaticContext structure for tests which captures the context for each test func.
 ///
 struct TestStaticContext: StaticContext {
-    public let dso: UnsafeRawPointer
     public let file: String
     public let function: String
     public let line: Int
@@ -322,8 +321,7 @@ struct TestStaticContext: StaticContext {
     ///
     /// Init `self` capturing the static environment of the caller.
     ///
-    init(_ dso: UnsafeRawPointer = #dsohandle, _ file: String = #file, _ function: String = #function, _ line: Int = #line) {
-        self.dso        = dso
+    init(_ file: String = #file, _ function: String = #function, _ line: Int = #line) {
         self.file       = file
         self.function   = function
         self.line       = line
