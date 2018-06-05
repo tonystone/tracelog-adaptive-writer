@@ -236,7 +236,7 @@ private func _testLog(for level: LogLevel, _ staticContext: TestStaticContext, _
 /// Validate that the log record is in the journal
 ///
 private func validateJournalEntry(for input: (timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: TestRuntimeContext, staticContext: TestStaticContext), writer: SDJournalWriter, syslogIdentifier: String) {
-    let messageDateString = dateFormatter.string(from:Date(timeIntervalSince1970: (input.timestamp / 1000.0) - 1.0)) // Subtract 1 second to cover any tolerance issue with date searching on some platforms
+    let messageDateString = dateFormatter.string(from:Date(timeIntervalSince1970: input.timestamp / 1000.0))
 
     let data = shell("journalctl -o json --identifier=\(syslogIdentifier) --since='\(messageDateString)'")
 
@@ -352,7 +352,10 @@ let dateFormatter: DateFormatter = {
 
     let formatter = DateFormatter()
     formatter.calendar = Calendar(identifier: .gregorian)
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = TimeZone.current
     formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
     return formatter
 }()
 
