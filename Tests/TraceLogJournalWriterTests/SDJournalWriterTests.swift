@@ -236,12 +236,11 @@ private func _testLog(for level: LogLevel, _ staticContext: TestStaticContext, _
 /// Validate that the log record is in the journal
 ///
 private func validateJournalEntry(for input: (timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: TestRuntimeContext, staticContext: TestStaticContext), writer: SDJournalWriter, syslogIdentifier: String) {
-    let messageDateString = dateFormatter.string(from:Date(timeIntervalSince1970: input.timestamp / 1000.0))
 
-    let data = shell("journalctl -o json --identifier=\(syslogIdentifier) --since='\(messageDateString)'")
+    let data = shell("journalctl -o json --identifier=\(syslogIdentifier) -n 1")
 
     guard data.count > 0
-            else { XCTFail("Journal entry not found for identifier \"\(syslogIdentifier)\", since date: '\(messageDateString)'."); return }
+            else { XCTFail("Journal entry not found for identifier \"\(syslogIdentifier)\"."); return }
     ///
     /// The journal entries are returned one JSON object per line with
     /// no comma between lines.  This is invalid JSON on it's own so split the
@@ -342,19 +341,5 @@ struct TestRuntimeContext: RuntimeContext {
         self.threadIdentifier = threadIdentifier
     }
 }
-
-///
-/// Date formater for sending to journalctl
-///
-let dateFormatter: DateFormatter = {
-
-    let formatter = DateFormatter()
-    formatter.calendar = Calendar(identifier: .gregorian)
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.timeZone = TimeZone.current
-    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-
-    return formatter
-}()
 
 #endif
