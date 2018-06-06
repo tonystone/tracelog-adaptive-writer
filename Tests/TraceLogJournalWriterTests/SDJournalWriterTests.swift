@@ -282,6 +282,7 @@ private func validateJournalEntry(for input: (timestamp: Double, level: LogLevel
 
                 return  /// If we found a match and compared it, we're done!
             }
+            XCTFail("Journal entry not found for identifier \"\(syslogIdentifier)\".")
         } catch {
             XCTFail("Could parse JSON \(String(data: jsonData, encoding: .utf8) ?? "nil"), error: \(error)."); return
         }
