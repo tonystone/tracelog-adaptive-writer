@@ -1,13 +1,16 @@
 language: c
 
+sudo: required
+
 matrix:
   include:
     - os: osx
       osx_image: xcode9.4
+      before_install:
+        - sudo log config --subsystem "xctest" --mode "persist:debug"
       script:
         - swift test
     - os: linux
-      sudo: required
       services:
         - docker
       before_install:
