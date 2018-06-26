@@ -1,5 +1,5 @@
 ///
-///  SDJournalWriter.swift
+///  AdaptiveWriter.swift
 ///
 ///  Copyright 2018 Tony Stone
 ///
@@ -19,67 +19,64 @@
 ///
 #if os(Linux)
 
-import Swift
+import Foundation
 import TraceLog
 import CSDJournal
 
 ///
 /// Linux systemd journal writer.
 ///
-public class SDJournalWriter: Writer {
-
-    public typealias SDJournalPriority = Int32
+internal class LinuxPlatformWriter: _PlatformWriter {
 
     ///
     /// The default LogLevel Conversion Table.
     ///
-    public static let defaultLogLevelConversion: [LogLevel: SDJournalPriority] = [
-        .error:   LOG_ERR,
-        .warning: LOG_WARNING,
-        .info:    LOG_INFO,
-        .trace1:  LOG_DEBUG,
-        .trace2:  LOG_DEBUG,
-        .trace3:  LOG_DEBUG,
-        .trace4:  LOG_DEBUG
+    static let defaultLogLevelConversion: [LogLevel: Platform.LogLevel] = [
+        .error:   Platform.LogLevel(LOG_ERR),
+        .warning: Platform.LogLevel(LOG_WARNING),
+        .info:    Platform.LogLevel(LOG_INFO),
+        .trace1:  Platform.LogLevel(LOG_DEBUG),
+        .trace2:  Platform.LogLevel(LOG_DEBUG),
+        .trace3:  Platform.LogLevel(LOG_DEBUG),
+        .trace4:  Platform.LogLevel(LOG_DEBUG)
     ]
 
     ///
     /// Override value for the systemd journal field SYSLOG_IDENTIFIER.
     ///
-    private let syslogIdentifier: String?
+    internal /* @testable */
+    let subsystem: String
 
     ///
     /// A dictionary keyed by TraceLog LogLevels with the value to convert to the sd-journals level.
     ///
-    private let logLevelConversion: [LogLevel: SDJournalPriority]
+    private let logLevelConversion: [LogLevel: Platform.LogLevel]
 
     ///
-    /// Initializes an SDJournalWriter.
+    /// Initializes an AdaptiveWriter.
     ///
     /// - Parameters:
     ///     - syslogIdentifier: A String override value for the systemd journal field SYSLOG_IDENTIFIER. If not passsed the journal will set it's default value.
     ///     - logLevelConversion: A dictionary keyed by TraceLog LogLevels with the value to convert to the os_log level.
     ///
-    public init(syslogIdentifier: String? = nil, logLevelConversion: [LogLevel: SDJournalPriority] = SDJournalWriter.defaultLogLevelConversion) {
-        self.syslogIdentifier   = syslogIdentifier
+    required init(subsystem: String? = nil, logLevelConversion: [LogLevel: Platform.LogLevel]) {
+        self.subsystem          = subsystem ?? ProcessInfo.processInfo.processName
         self.logLevelConversion = logLevelConversion
     }
 
     ///
     /// Required log function for the `Writer`.
     ///
-    public func log(_ timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: RuntimeContext, staticContext: StaticContext) {
+    @inline(__always)
+    func log(_ timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: RuntimeContext, staticContext: StaticContext) {
 
-        var elements  = ["MESSAGE=\(message)",
+        let elements  = ["MESSAGE=\(message)",
                          "CODE_FILE=\(staticContext.file)",
                          "CODE_LINE=\(staticContext.line)",
                          "CODE_FUNC=\(staticContext.function)",
-                         "PRIORITY=\(convertLogLevel(for: level))",
-                         "TAG=\(tag)"]
-
-        if let identifier = self.syslogIdentifier {
-            elements.append("SYSLOG_IDENTIFIER=\(identifier)")
-        }
+                         "PRIORITY=\(Int32(platformLogLevel(for: level)))",
+                         "TAG=\(tag)",
+                         "SYSLOG_IDENTIFIER=\(self.subsystem)"]
 
         withIovecArray(elements) { array, count -> Void in
             sd_journal_sendv(array, count)
@@ -87,13 +84,13 @@ public class SDJournalWriter: Writer {
     }
 
     ///
-    /// Converts TraceLog level to os_log.
+    ///  Converts a TraceLog.LogLevel to the platforms level based on the configured logLevelConversion matrix.
     ///
-    internal /* @testable */
-    func convertLogLevel(for level: LogLevel) -> SDJournalPriority {
+    @inline(__always)
+    func platformLogLevel(for level: LogLevel) -> Platform.LogLevel {
 
-        guard let level = logLevelConversion[level]
-                else { return LOG_INFO }
+        guard let level = self.logLevelConversion[level]
+                else { return Platform.LogLevel(LOG_INFO) }
 
         return level
     }
