@@ -25,12 +25,9 @@ matrix:
       os: osx
       osx_image: xcode9.4
       before_install:
-        - sudo log config --subsystem "xctest" --mode "persist:debug"
         - swift package generate-xcodeproj --xcconfig-overrides Package.xcconfig
       script:
-        - xcodebuild -project TraceLogAdaptiveWriter.xcodeproj -scheme TraceLogAdaptiveWriter-Package -destination "platform=iOS Simulator,OS=11.3,name=iPhone 8" -sdk iphonesimulator -enableCodeCoverage YES test
-      after_success:
-        - bash <(curl -s https://codecov.io/bash)
+        - xcodebuild -project TraceLogAdaptiveWriter.xcodeproj -scheme TraceLogAdaptiveWriter-Package -destination "platform=iOS Simulator,OS=11.3,name=iPhone 8" -sdk iphonesimulator build
     -
       os: linux
       services:
