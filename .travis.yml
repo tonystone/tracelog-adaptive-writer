@@ -4,15 +4,35 @@ sudo: required
 
 matrix:
   include:
-    - os: osx
+    -
+      os: osx
       osx_image: xcode9.4
       before_install:
         - sudo log config --subsystem "xctest" --mode "persist:debug"
       script:
         - swift test
+    -
+      os: osx
+      osx_image: xcode9.4
+      before_install:
+        - sudo log config --subsystem "xctest" --mode "persist:debug"
+        - swift package generate-xcodeproj --xcconfig-overrides Package.xcconfig
+      script:
+        - xcodebuild -project TraceLogAdaptiveWriter.xcodeproj -scheme TraceLogAdaptiveWriter-Package -destination "platform=OS X,arch=x86_64" -sdk macosx -enableCodeCoverage YES test
       after_success:
         - bash <(curl -s https://codecov.io/bash)
-    - os: linux
+    -
+      os: osx
+      osx_image: xcode9.4
+      before_install:
+        - sudo log config --subsystem "xctest" --mode "persist:debug"
+        - swift package generate-xcodeproj --xcconfig-overrides Package.xcconfig
+      script:
+        - xcodebuild -project TraceLogAdaptiveWriter.xcodeproj -scheme TraceLogAdaptiveWriter-Package -destination "platform=iOS Simulator,OS=11.3,name=iPhone 8" -sdk iphonesimulator -enableCodeCoverage YES test
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)
+    -
+      os: linux
       services:
         - docker
       before_install:
@@ -21,7 +41,5 @@ matrix:
         - docker run -d --name systemd-test --security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro -t systemd-test
       script:
         - docker exec -t systemd-test bash -c "swift test;"
-      after_success:
-        - docker exec -t systemd-test bash -c "bash <(curl -s https://codecov.io/bash);"
 
 
