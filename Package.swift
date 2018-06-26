@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:4.1
 ///
 /// Package.swift
 ///
@@ -7,20 +7,21 @@
 import PackageDescription
 
 let package = Package(
-        name: "TraceLogJournalWriter",
+        name: "TraceLogAdaptiveWriter",
         products: [
-            .library(name: "TraceLogJournalWriter", type: .dynamic, targets: ["TraceLogJournalWriter"])
+            .library(name: "TraceLogAdaptiveWriter", type: .dynamic, targets: ["TraceLogAdaptiveWriter"])
         ],
         dependencies: [
-            .package(url: "https://github.com/tonystone/tracelog.git", from: "2.0.0"),
+            .package(url: "https://github.com/tonystone/tracelog.git", from: "4.0.0-beta.1"),
+            .package(url: "https://github.com/tonystone/tracelog-test-harness.git", from: "1.0.0-beta.1"),
             .package(url: "https://github.com/tonystone/csdjournal.git", .branchItem("master"))
         ],
         targets: [
             /// Module targets
-            .target(name: "TraceLogJournalWriter", dependencies: ["TraceLog", "CSDJournal"], path: "Sources/TraceLogJournalWriter"),
+            .target(name: "TraceLogAdaptiveWriter", dependencies: ["TraceLog", "CSDJournal"], path: "Sources/TraceLogAdaptiveWriter"),
 
             /// Tests
-            .testTarget(name: "TraceLogJournalWriterTests", dependencies: ["TraceLogJournalWriter"], path: "Tests/TraceLogJournalWriterTests")
+            .testTarget(name: "TraceLogAdaptiveWriterTests", dependencies: ["TraceLogAdaptiveWriter", "TraceLogTestHarness"], path: "Tests/TraceLogAdaptiveWriterTests")
         ],
         swiftLanguageVersions: [4]
 )

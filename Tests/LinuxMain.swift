@@ -21,15 +21,15 @@
 
 import XCTest
 
-@testable import TraceLogJournalWriterTests
+@testable import TraceLogAdaptiveWriterTests
 
 XCTMain([
-    testCase(SDJournalWriterTests.allTests),
-    testCase(TraceLogWithSDJournalWriterTests.allTests)
+    testCase(AdaptiveWriterTests.allTests),
+    testCase(TraceLogWithAdaptiveWriterTests.allTests)
 ])
 
-extension SDJournalWriterTests {
-    static var allTests: [(String, (SDJournalWriterTests) -> () throws -> Void)] {
+extension AdaptiveWriterTests {
+    static var allTests: [(String, (AdaptiveWriterTests) -> () throws -> Void)] {
         return [
             ("testLogError", testLogError),
             ("testLogWarning", testLogWarning),
@@ -58,8 +58,8 @@ extension SDJournalWriterTests {
     }
 }
 
-extension TraceLogWithSDJournalWriterTests {
-    static var allTests: [(String, (TraceLogWithSDJournalWriterTests) -> () throws -> Void)] {
+extension TraceLogWithAdaptiveWriterTests {
+    static var allTests: [(String, (TraceLogWithAdaptiveWriterTests) -> () throws -> Void)] {
         return [
             ("testLogError", testLogError),
             ("testLogWarning", testLogWarning),

@@ -1,4 +1,4 @@
-# Run TraceLogJournalWriterTests in a container
+# Run TraceLogAdaptiveWriterTests in a container
 
 FROM solita/ubuntu-systemd:xenial
 LABEL maintainer="Tony Stone <http://github.com/tonystone>"
