@@ -10,6 +10,8 @@ matrix:
         - sudo log config --subsystem "xctest" --mode "persist:debug"
       script:
         - swift test
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)
     - os: linux
       services:
         - docker
@@ -19,3 +21,7 @@ matrix:
         - docker run -d --name systemd-test --security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro -t systemd-test
       script:
         - docker exec -t systemd-test bash -c "swift test;"
+      after_success:
+        - docker exec -t systemd-test bash -c "bash <(curl -s https://codecov.io/bash);"
+
+
