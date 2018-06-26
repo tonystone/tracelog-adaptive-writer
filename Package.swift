@@ -12,8 +12,7 @@ let package = Package(
             .library(name: "TraceLogAdaptiveWriter", type: .dynamic, targets: ["TraceLogAdaptiveWriter"])
         ],
         dependencies: [
-            .package(url: "https://github.com/tonystone/tracelog.git", from: "4.0.0-beta.1"),
-            .package(url: "https://github.com/tonystone/tracelog-test-harness.git", from: "1.0.0-beta.1"),
+            .package(url: "https://github.com/tonystone/tracelog.git", from: "4.0.0-beta.2"),
             .package(url: "https://github.com/tonystone/csdjournal.git", .branchItem("master"))
         ],
         targets: [
@@ -21,7 +20,7 @@ let package = Package(
             .target(name: "TraceLogAdaptiveWriter", dependencies: ["TraceLog", "CSDJournal"], path: "Sources/TraceLogAdaptiveWriter"),
 
             /// Tests
-            .testTarget(name: "TraceLogAdaptiveWriterTests", dependencies: ["TraceLogAdaptiveWriter", "TraceLogTestHarness"], path: "Tests/TraceLogAdaptiveWriterTests")
+            .testTarget(name: "TraceLogAdaptiveWriterTests", dependencies: ["TraceLogAdaptiveWriter", "TraceLog"], path: "Tests/TraceLogAdaptiveWriterTests")
         ],
         swiftLanguageVersions: [4]
 )
