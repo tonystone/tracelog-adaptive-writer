@@ -73,7 +73,7 @@ AdaptiveWriter contains a default conversion table for each platform.
 
 If the default table does not work for your particular use-case, AdaptiveWriter allows you to override the default conversion table at creation time.  Here are some examples:
 
-Setting an empty table will convert all TraceLog levels to the default level that the platform in use.  On Darwin that is `OSLogType.default` and on Linux the value is `LOG_INFO`.
+Setting an empty table will convert all TraceLog levels to the default level of the platform in use.  On Darwin that is `OSLogType.default` and on Linux the value is `LOG_INFO`.
 
 ```swift
     ///
