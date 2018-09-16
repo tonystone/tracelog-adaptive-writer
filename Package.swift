@@ -12,8 +12,8 @@ let package = Package(
             .library(name: "TraceLogAdaptiveWriter", type: .dynamic, targets: ["TraceLogAdaptiveWriter"])
         ],
         dependencies: [
-            .package(url: "https://github.com/tonystone/tracelog.git", from: "4.0.0-beta.2"),
-            .package(url: "https://github.com/tonystone/csdjournal.git", .branchItem("master"))
+            .package(url: "https://github.com/tonystone/tracelog.git", from: "4.0.1"),
+            .package(url: "https://github.com/tonystone/csdjournal.git", .exact("1.3.0"))
         ],
         targets: [
             /// Module targets
