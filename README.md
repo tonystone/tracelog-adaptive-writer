@@ -27,9 +27,12 @@ See [TraceLog](https://github.com/tonystone/tracelog) for more details.
 
 Please see [Swift Package Manager](https://swift.org/package-manager/#conceptual-overview) for further information.
 
-## Author
+## Credits
 
-Tony Stone ([https://github.com/tonystone](https://github.com/tonystone))
+* **Tony Stone** ([https://github.com/tonystone](https://github.com/tonystone)) - Author
+* **Félix Fischer** ([https://github.com/felix91gr](https://github.com/felix91gr)) - Ideas, Planning, Code & Testing
+* **Ryan Lovelett** ([https://github.com/RLovelett](https://github.com/RLovelett)) - Ideas & Planning
+
 
 ## License
 
