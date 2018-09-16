@@ -1,6 +1,6 @@
 
 Pod::Spec.new do |s|
-  s.name             = "TraceLog-Adaptive-Writer"
+  s.name             = "TraceLogAdaptiveWriter"
   s.version          = "1.0.0"
   s.summary          = "An adaptive system log writer for the TraceLog logging system."
   s.description      = <<-DESC
