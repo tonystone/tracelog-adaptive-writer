@@ -15,6 +15,7 @@
 <a href="https://codecov.io/gh/tonystone/tracelog-adaptive-writer">
   <img src="https://codecov.io/gh/tonystone/tracelog-adaptive-writer/branch/master/graph/badge.svg" />
 </a>
+
 ---
 
 ## Overview
