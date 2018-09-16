@@ -74,3 +74,6 @@ Vagrantfile
 
 # JetBrains products
 .idea
+
+# Bundler
+Gemfile.lock
