@@ -137,6 +137,8 @@ Build Environment
 | Linux    | 4.1 | &#x2714; | &#x2718; |
 | OSX      | 4.1 | &#x2714; | Xcode 9.4 |
 
+> Note: Compiling on Linux requires **libsystemd-dev** be installed on the build system.  Use `apt-get install libsystemd-dev` to install it.
+
 Minimum Runtime Version
 
 | iOS |  OS X | tvOS | watchOS | Linux |
