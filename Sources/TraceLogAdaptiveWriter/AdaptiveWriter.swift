@@ -70,5 +70,3 @@ extension AdaptiveWriter {
         return self.implementation.platformLogLevel(for: level)
     }
 }
-
-

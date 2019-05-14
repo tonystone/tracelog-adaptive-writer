@@ -1,4 +1,4 @@
-// swift-tools-version:4.1
+// swift-tools-version:5.0
 ///
 /// Package.swift
 ///
@@ -12,15 +12,15 @@ let package = Package(
             .library(name: "TraceLogAdaptiveWriter", type: .dynamic, targets: ["TraceLogAdaptiveWriter"])
         ],
         dependencies: [
-            .package(url: "https://github.com/tonystone/tracelog.git", "4.0.1"..<"5.0.0"),
-            .package(url: "https://github.com/tonystone/csdjournal.git", .exact("1.3.0"))
+            .package(url: "https://github.com/tonystone/tracelog.git", "4.0.1"..<"5.0.0")
         ],
         targets: [
             /// Module targets
-            .target(name: "TraceLogAdaptiveWriter", dependencies: ["TraceLog", "CSDJournal"], path: "Sources/TraceLogAdaptiveWriter"),
+            .systemLibrary(name: "systemd", pkgConfig: "libsystemd"),
+            .target(name: "TraceLogAdaptiveWriter", dependencies: ["TraceLog", "systemd"], path: "Sources/TraceLogAdaptiveWriter"),
 
             /// Tests
             .testTarget(name: "TraceLogAdaptiveWriterTests", dependencies: ["TraceLogAdaptiveWriter", "TraceLog"], path: "Tests/TraceLogAdaptiveWriterTests")
         ],
-        swiftLanguageVersions: [4]
+        swiftLanguageVersions: [.v4]
 )

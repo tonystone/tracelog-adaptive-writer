@@ -21,7 +21,7 @@
 
 import Foundation
 import TraceLog
-import CSDJournal
+import systemd
 
 ///
 /// Linux systemd journal writer.
