@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "TraceLogAdaptiveWriter"
-  s.version          = "1.0.1"
+  s.version          = "2.0.0"
   s.summary          = "An adaptive system log writer for the TraceLog logging system."
   s.description      = <<-DESC
                         A `Writer` implementation for the TraceLog logging system that logs to the system logging facility on the platform that its running on.
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.swift_version = '4.1'
 
   s.ios.deployment_target     = '10.0'
-  s.osx.deployment_target     = '10.12'
+  s.osx.deployment_target     = '10.13'
   s.watchos.deployment_target = '3.0'
   s.tvos.deployment_target    = '10.0'
 
@@ -27,5 +27,5 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Sources/TraceLogAdaptiveWriter/**/*.swift'
 
-  s.dependency 'TraceLog', ">= 4.0.1", "< 5.0.0"
+  s.dependency 'TraceLog', '~> 5.0'
 end

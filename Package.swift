@@ -12,7 +12,7 @@ let package = Package(
             .library(name: "TraceLogAdaptiveWriter", type: .dynamic, targets: ["TraceLogAdaptiveWriter"])
         ],
         dependencies: [
-            .package(url: "https://github.com/tonystone/tracelog.git", "4.0.1"..<"5.0.0")
+            .package(url: "https://github.com/tonystone/tracelog.git", "5.0.0"...)
         ],
         targets: [
             /// Module targets
@@ -22,5 +22,5 @@ let package = Package(
             /// Tests
             .testTarget(name: "TraceLogAdaptiveWriterTests", dependencies: ["TraceLogAdaptiveWriter", "TraceLog"], path: "Tests/TraceLogAdaptiveWriterTests")
         ],
-        swiftLanguageVersions: [.v4]
+        swiftLanguageVersions: [.version("5")]
 )
