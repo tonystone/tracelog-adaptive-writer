@@ -21,12 +21,11 @@
 import XCTest
 
 import TraceLog
-import TraceLogTestHarness
 
 @testable import TraceLogAdaptiveWriter
 
-@available(iOS 10.0, macOS 10.12, watchOS 3.0, tvOS 10.0, *)
-let testEqual: (AdaptiveWriter, LogEntry?, LogEntry) -> Void = { writer, result, expected in
+@available(iOS 10.0, macOS 10.13, watchOS 3.0, tvOS 10.0, *)
+let testEqual: (AdaptiveWriter, TestLogEntry?, TestLogEntry) -> Void = { writer, result, expected in
 
     guard let result = result
         else { XCTFail("Failed to locate log entry."); return }
@@ -50,7 +49,7 @@ let testEqual: (AdaptiveWriter, LogEntry?, LogEntry) -> Void = { writer, result,
 ///
 /// Direct Logging to the Logger
 ///
-@available(iOS 10.0, macOS 10.12, watchOS 3.0, tvOS 10.0, *)
+@available(iOS 10.0, macOS 10.13, watchOS 3.0, tvOS 10.0, *)
 class AdaptiveWriterTests: XCTestCase {
 
     let testHarness = TestHarness(writer: AdaptiveWriter(), reader: PlatformReader())
@@ -158,7 +157,7 @@ class AdaptiveWriterTests: XCTestCase {
 ///
 /// Logging through TraceLog to the Logger
 ///
-@available(iOS 10.0, macOS 10.12, watchOS 3.0, tvOS 10.0, *)
+@available(iOS 10.0, macOS 10.13, watchOS 3.0, tvOS 10.0, *)
 class TraceLogWithAdaptiveWriterTests: XCTestCase {
 
     let testHarness = TestHarness(writer: AdaptiveWriter(), reader: PlatformReader())

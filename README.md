@@ -4,7 +4,7 @@
     <img src="https://img.shields.io/badge/platforms-Linux%20%7C%20iOS%20%7C%20macOS%20%7C%20watchOS%20%7C%20tvOS%20-lightgray.svg?style=flat" alt="Platforms: Linux | iOS | macOS | watchOS | tvOS" />
 </a>
 <a href="https://github.com/tonystone/tracelog-adaptive-writer" target="_blank">
-   <img src="https://img.shields.io/badge/Swift-4.1-orange.svg?style=flat" alt="Swift 4.1">
+   <img src="https://img.shields.io/badge/Swift-5.0-orange.svg?style=flat" alt="Swift 5.0">
 </a>
 <a href="http://cocoadocs.org/docsets/TraceLogAdaptiveWriter" target="_blank">
    <img src="https://img.shields.io/cocoapods/v/TraceLogAdaptiveWriter.svg?style=flat" alt="Version"/>
@@ -134,8 +134,8 @@ Build Environment
 
 | Platform | Swift | Swift Build | Xcode |
 |:--------:|:-----:|:----------:|:------:|
-| Linux    | 4.1 | &#x2714; | &#x2718; |
-| OSX      | 4.1 | &#x2714; | Xcode 9.4 |
+| Linux    | 5.0 | &#x2714; | &#x2718; |
+| OSX      | 5.0| &#x2714; | Xcode 10.x |
 
 > Note: Compiling on Linux requires **libsystemd-dev** be installed on the build system.  Use `apt-get install libsystemd-dev` to install it.
 
@@ -156,7 +156,7 @@ Please see [Swift Package Manager](https://swift.org/package-manager/#conceptual
 TraceLog is available through [CocoaPods](http://cocoapods.org). Simply add the following lines to your Podfile:
 
 ```ruby
-pod "TraceLog", "~> 4.0.1"
+pod "TraceLog", "~> 5.0.0"
 pod "TraceLogAdaptiveWriter"
 ```
 

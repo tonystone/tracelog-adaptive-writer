@@ -23,11 +23,11 @@ RUN mkdir ${WORKDIR}
 WORKDIR ${WORKDIR}
 
 # Install Swift
-RUN curl -O https://swift.org/builds/swift-4.1-release/ubuntu1604/swift-4.1-RELEASE/swift-4.1-RELEASE-ubuntu16.04.tar.gz \
-    && tar xzvf swift-4.1-RELEASE-ubuntu16.04.tar.gz
+RUN curl -O https://swift.org/builds/swift-5.1-release/ubuntu1604/swift-5.1-RELEASE/swift-5.1-RELEASE-ubuntu16.04.tar.gz \
+    && tar xzvf swift-5.1-RELEASE-ubuntu16.04.tar.gz
 
-ENV PATH ${WORKDIR}/swift-4.1-RELEASE-ubuntu16.04/usr/bin:$PATH
-ENV C_INCLUDE_PATH ${WORKDIR}/swift-4.1-RELEASE-ubuntu16.04/usr/lib/swift/clang/include/
+ENV PATH ${WORKDIR}/swift-5.1-RELEASE-ubuntu16.04/usr/bin:$PATH
+ENV C_INCLUDE_PATH ${WORKDIR}/swift-5.1-RELEASE-ubuntu16.04/usr/lib/swift/clang/include/
 ENV CPLUS_INCLUDE_PATH $C_INCLUDE_PATH
 
 COPY Package.swift ${WORKDIR}/Package.swift

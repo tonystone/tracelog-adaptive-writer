@@ -1,0 +1,5 @@
+module systemd [system] {
+  header "sd-journal.h"
+  link "systemd"
+  export *
+}

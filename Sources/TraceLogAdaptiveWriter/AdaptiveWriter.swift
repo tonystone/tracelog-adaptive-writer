@@ -47,8 +47,8 @@ public class AdaptiveWriter: Writer {
     ///
     /// Required log function for the `Writer`.
     ///
-    public func log(_ timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: RuntimeContext, staticContext: StaticContext) {
-        self.implementation.log(timestamp, level: level, tag: tag, message: message, runtimeContext: runtimeContext, staticContext: staticContext)
+    public func write(_ entry: Writer.LogEntry) -> Result<Int, FailureReason> {
+        return self.implementation.write(entry)
     }
 
     ///
@@ -70,5 +70,3 @@ extension AdaptiveWriter {
         return self.implementation.platformLogLevel(for: level)
     }
 }
-
-

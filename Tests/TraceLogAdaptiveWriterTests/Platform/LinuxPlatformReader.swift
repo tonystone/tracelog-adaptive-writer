@@ -21,15 +21,17 @@
 
 import XCTest
 import TraceLog
-import TraceLogTestHarness
 
 @testable import TraceLogAdaptiveWriter
 
 class LinuxPlatformReader: Reader {
 
-    func logEntry(for writer: AdaptiveWriter, timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: RuntimeContext, staticContext: StaticContext) -> LogEntry? {
+    func logEntry(for writer: AdaptiveWriter, timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: RuntimeContext, staticContext: StaticContext) -> TestLogEntry? {
 
-     let data = shell("journalctl -o json --identifier='\(writer.subsystem)' -n 1")
+        let command = "journalctl -o json --identifier='\(writer.subsystem)' -n 1"
+
+        guard let data = try? shell(command)
+            else { XCTFail("Could not run shell command \(command)."); return nil }
 
         guard data.count > 0
                 else { XCTFail("Journal entry not found for subsystem: \"\(writer.subsystem)\"."); return nil }
@@ -79,7 +81,7 @@ class LinuxPlatformReader: Reader {
                     }
 
 
-                    return LogEntry(timestamp:  timestamp,
+                    return TestLogEntry(timestamp:  timestamp,
                                     level:      level,
                                     message:    message,
                                     tag:        journalEntry["TAG"] as? String,

@@ -19,7 +19,6 @@
 ///
 import XCTest
 import TraceLog
-import TraceLogTestHarness
 
 #if os(macOS)
 
@@ -27,10 +26,10 @@ import os.log
 
 @testable import TraceLogAdaptiveWriter
 
-@available(iOS 10.0, macOS 10.12, watchOS 3.0, tvOS 10.0, *)
+@available(iOS 10.0, macOS 10.13, watchOS 3.0, tvOS 10.0, *)
 class DarwinPlatformReader: Reader {
 
-    func logEntry(for writer: AdaptiveWriter, timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: RuntimeContext, staticContext: StaticContext) -> LogEntry? {
+    func logEntry(for writer: AdaptiveWriter, timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: RuntimeContext, staticContext: StaticContext) -> TestLogEntry? {
 
        let osLogType = OSLogType(rawValue: UInt8(writer.platformLogLevel(for: level)))
 
@@ -56,7 +55,8 @@ class DarwinPlatformReader: Reader {
 
         for _ in 0...10 {
 
-            let data = shell(command + " --last \(retryTime / 1000)")
+            guard let data = try? shell(command + " --last \(retryTime / 1000)")
+                else { XCTFail("Could not run shell command \(command + " --last \(retryTime / 1000)")."); return nil }
 
             let objects: Any
             do {
@@ -87,7 +87,7 @@ class DarwinPlatformReader: Reader {
                     customAttributes = ["subsystem": subsystem]
                 }
 
-                return LogEntry(timestamp: timestamp,
+                return TestLogEntry(timestamp: timestamp,
                                 level: level,
                                 message: message,  // Note we return the input message because we know it matches because we searched by message
                                 tag: jsonEntry["category"] as? String,
@@ -99,7 +99,7 @@ class DarwinPlatformReader: Reader {
     }
 }
 
-@available(iOS 10.0, macOS 10.12, watchOS 3.0, tvOS 10.0, *)
+@available(iOS 10.0, macOS 10.13, watchOS 3.0, tvOS 10.0, *)
 extension OSLogType {
 
     public var description: String {
@@ -112,7 +112,7 @@ extension OSLogType {
     }
 }
 
-@available(iOS 10.0, macOS 10.12, watchOS 3.0, tvOS 10.0, *)
+@available(iOS 10.0, macOS 10.13, watchOS 3.0, tvOS 10.0, *)
 class DarwinPlatformValidator: _PlatformValidator {
 
     static var `default`: Platform.LogLevel { return Platform.LogLevel(OSLogType.default.rawValue) }
