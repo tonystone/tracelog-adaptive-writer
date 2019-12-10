@@ -32,10 +32,10 @@ import TraceLogAdaptiveWriter
 
 #elseif os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
 
-    @available(iOS 10.0, macOS 10.12, watchOS 3.0, tvOS 10.0, *)
+    @available(iOS 10.0, macOS 10.13, watchOS 3.0, tvOS 10.0, *)
     internal typealias PlatformValidator = DarwinPlatformValidator
 
-    @available(iOS 10.0, macOS 10.12, watchOS 3.0, tvOS 10.0, *)
+    @available(iOS 10.0, macOS 10.13, watchOS 3.0, tvOS 10.0, *)
     internal typealias PlatformReader    = DarwinPlatformReader
 #endif
 

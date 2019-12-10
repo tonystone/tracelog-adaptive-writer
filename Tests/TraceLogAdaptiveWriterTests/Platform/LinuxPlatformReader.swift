@@ -21,13 +21,12 @@
 
 import XCTest
 import TraceLog
-import TraceLogTestHarness
 
 @testable import TraceLogAdaptiveWriter
 
 class LinuxPlatformReader: Reader {
 
-    func logEntry(for writer: AdaptiveWriter, timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: RuntimeContext, staticContext: StaticContext) -> LogEntry? {
+    func logEntry(for writer: AdaptiveWriter, timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: RuntimeContext, staticContext: StaticContext) -> TestLogEntry? {
 
      let data = shell("journalctl -o json --identifier='\(writer.subsystem)' -n 1")
 
@@ -79,7 +78,7 @@ class LinuxPlatformReader: Reader {
                     }
 
 
-                    return LogEntry(timestamp:  timestamp,
+                    return TestLogEntry(timestamp:  timestamp,
                                     level:      level,
                                     message:    message,
                                     tag:        journalEntry["TAG"] as? String,

@@ -1,5 +1,5 @@
 ///
-///  Package.xcconfig
+///  TestUtilities.swift
 ///
 ///  Copyright 2018 Tony Stone
 ///
@@ -15,11 +15,32 @@
 ///  See the License for the specific language governing permissions and
 ///  limitations under the License.
 ///
-///  Created by Tony Stone on 6/11/18.
+///  Created by Tony Stone on 6/16/18.
 ///
-CLANG_ENABLE_MODULES = YES
+import Foundation
+import XCTest
 
-IPHONEOS_DEPLOYMENT_TARGET = 10.0
-MACOSX_DEPLOYMENT_TARGET = 10.13
-TVOS_DEPLOYMENT_TARGET = 10.0
-WATCHOS_DEPLOYMENT_TARGET = 3.0
+#if os(macOS) || os(Linux)
+
+///
+/// Helper to run the shell and return the output
+///
+@available(OSX 10.13, *)
+@available(iOS, unavailable)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
+public func shell(_ command: String) throws -> Data {
+    let task = Process()
+    task.executableURL = URL(fileURLWithPath: "/bin/bash")
+
+    task.arguments = ["-c", command]
+
+    let pipe = Pipe()
+    task.standardOutput = pipe
+
+    try task.run()
+
+    return pipe.fileHandleForReading.readDataToEndOfFile()
+}
+
+#endif
