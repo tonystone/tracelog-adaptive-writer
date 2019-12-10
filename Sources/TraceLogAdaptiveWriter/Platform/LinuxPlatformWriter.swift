@@ -75,7 +75,7 @@ internal class LinuxPlatformWriter: _PlatformWriter {
                          "CODE_LINE=\(entry.staticContext.line)",
                          "CODE_FUNC=\(entry.staticContext.function)",
                          "PRIORITY=\(Int32(platformLogLevel(for: entry.level)))",
-                         "TAG=\(tag)",
+                         "TAG=\(entry.tag)",
                          "SYSLOG_IDENTIFIER=\(self.subsystem)"]
 
         withIovecArray(elements) { array, count -> Void in
