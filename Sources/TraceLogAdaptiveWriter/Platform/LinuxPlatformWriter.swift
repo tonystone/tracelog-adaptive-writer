@@ -68,19 +68,20 @@ internal class LinuxPlatformWriter: _PlatformWriter {
     /// Required log function for the `Writer`.
     ///
     @inline(__always)
-    func log(_ timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: RuntimeContext, staticContext: StaticContext) {
+    func write(_ entry: Writer.LogEntry) -> Result<Int, FailureReason> {
 
-        let elements  = ["MESSAGE=\(message)",
-                         "CODE_FILE=\(staticContext.file)",
-                         "CODE_LINE=\(staticContext.line)",
-                         "CODE_FUNC=\(staticContext.function)",
-                         "PRIORITY=\(Int32(platformLogLevel(for: level)))",
+        let elements  = ["MESSAGE=\(entry.message)",
+                         "CODE_FILE=\(entry.staticContext.file)",
+                         "CODE_LINE=\(entry.staticContext.line)",
+                         "CODE_FUNC=\(entry.staticContext.function)",
+                         "PRIORITY=\(Int32(platformLogLevel(for: entry.level)))",
                          "TAG=\(tag)",
                          "SYSLOG_IDENTIFIER=\(self.subsystem)"]
 
         withIovecArray(elements) { array, count -> Void in
             sd_journal_sendv(array, count)
         }
+        return .success(elements.reduce(0, { $0 + $1.count }))
     }
 
     ///

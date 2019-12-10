@@ -73,10 +73,13 @@ internal class DarwinPlatformWriter: _PlatformWriter {
     /// Required log function for the `Writer`.
     ///
     @inline(__always)
-    func log(_ timestamp: Double, level: LogLevel, tag: String, message: String, runtimeContext: RuntimeContext, staticContext: StaticContext) {
-        let log = OSLog(subsystem: self.subsystem, category: tag)
+    func write(_ entry: Writer.LogEntry) -> Result<Int, FailureReason> {
 
-        os_log("%{public}@", log: log, type: OSLogType(UInt8(platformLogLevel(for: level))), message)
+        let log = OSLog(subsystem: self.subsystem, category: entry.tag)
+
+        os_log("%{public}@", log: log, type: OSLogType(UInt8(platformLogLevel(for: entry.level))), entry.message)
+
+        return .success(entry.message.count)
     }
 
     ///
