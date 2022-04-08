@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.3
 ///
 /// Package.swift
 ///
@@ -8,19 +8,24 @@ import PackageDescription
 
 let package = Package(
         name: "TraceLogAdaptiveWriter",
+        platforms: [.iOS(.v9), .macOS(.v10_13), .tvOS(.v9), .watchOS(.v2)],
         products: [
-            .library(name: "TraceLogAdaptiveWriter", type: .dynamic, targets: ["TraceLogAdaptiveWriter"])
+            .library(name: "TraceLogAdaptiveWriter", targets: ["TraceLogAdaptiveWriter"])
         ],
         dependencies: [
-            .package(url: "https://github.com/tonystone/tracelog.git", from: "5.0.0")
+            .package(url: "https://github.com/tonystone/tracelog.git", from: "5.0.1")
         ],
         targets: [
             /// Module targets
-            .systemLibrary(name: "systemd", pkgConfig: "libsystemd"),
-            .target(name: "TraceLogAdaptiveWriter", dependencies: ["TraceLog", "systemd"], path: "Sources/TraceLogAdaptiveWriter"),
+            .target(name: "TraceLogAdaptiveWriter",
+                    dependencies: [.product(name: "TraceLog", package: "TraceLog")],
+                    path: "Sources/TraceLogAdaptiveWriter"
+                   ),
 
             /// Tests
-            .testTarget(name: "TraceLogAdaptiveWriterTests", dependencies: ["TraceLogAdaptiveWriter", "TraceLog"], path: "Tests/TraceLogAdaptiveWriterTests")
+            .testTarget(name: "TraceLogAdaptiveWriterTests",
+                        dependencies: [.product(name: "TraceLog", package: "TraceLog"), "TraceLogAdaptiveWriter"],
+                        path: "Tests/TraceLogAdaptiveWriterTests")
         ],
         swiftLanguageVersions: [.version("5")]
 )
